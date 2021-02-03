@@ -1,2 +1,2 @@
-# FBLA_Coding-Programming
- FBLA SLC Coding&Programming Project
+# FBLA Coding & Programming Project
+Instructions TBD
