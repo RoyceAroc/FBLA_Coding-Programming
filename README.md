@@ -7,7 +7,7 @@ By: Royce Arockiasamy, South Forsyth High School
 1. Choose 'Keep' when downloading the file
 2. Choose 'Run Anyway'. I promise you the file is not hazardous to your system.
 3. Complete the Download Setup and click 'Finish'.
-4. Go to 'C:\Program Files\FBLA Quiz Portal' (unless a different directory is chosen) and click on the Application type labeled 'FBLA Quiz Portal'
+4. Go to 'C:\Program Files\FBLAQuizPortal' (unless a different directory is chosen) and click on the Application type labeled 'FBLA Quiz Portal'
 5. Interact with the Application
 ```
 
