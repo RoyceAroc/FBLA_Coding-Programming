@@ -12,3 +12,5 @@
 Build and compose project
 ```
 
+### Project Details
+
