@@ -1,6 +1,6 @@
 # FBLA Coding & Programming Project
 ### Download Links
-[Download Windows Quiz Portal Here](https://srv-store2.gofile.io/download/2PRku7/FBLA_Quiz_Portal.msi)
+[Windows Download Quiz Portal](https://srv-store2.gofile.io/download/2PRku7/FBLA_Quiz_Portal.msi)
 
 [Debian Link TBD]()
 
