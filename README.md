@@ -1,4 +1,5 @@
 # FBLA Coding & Programming Project
+By: Royce Arockiasamy, South Forsyth High School
 ### Download Links & Viewing Instructions
 [Windows Download Quiz Portal](https://srv-store2.gofile.io/download/2PRku7/FBLA_Quiz_Portal.msi)
 
