@@ -1,23 +1,24 @@
-import androidx.compose.desktop.AppManager
+
 import androidx.compose.desktop.Window
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.selection.selectable
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
+import androidx.compose.material.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.imageFromResource
 import androidx.compose.ui.input.pointer.pointerMoveFilter
-import androidx.compose.ui.layout.AlignmentLine
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.TextLayoutResult
 import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.font.*
-import androidx.compose.ui.text.platform.getFontPathAsString
+import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.font.FontStyle
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.font.fontFamily
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.style.TextOverflow
@@ -25,79 +26,338 @@ import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.compose.ui.zIndex
-import org.w3c.dom.Text
-import java.awt.image.BufferedImage
-import javax.imageio.ImageIO
 import net.jemzart.jsonkraken.JsonKraken
 import net.jemzart.jsonkraken.JsonValue
+import java.awt.image.BufferedImage
+import javax.imageio.ImageIO
+fun main() = Window(title = "FBLA Quiz Portal", icon = loadImageResource("fbla-portal_logo.png"), size = IntSize(1080, 712)) {
 
-fun main() = Window(title = "CSSA Test Portal", icon = loadImageResource("CSSA.png"), size = IntSize(1080, 712)) {
-    var noUsername by remember {
-        mutableStateOf(false)
-    }
-
+    var objectUse: String = ""
     var authenticated by remember {
         mutableStateOf(false)
     }
-
+    var home by remember {
+        mutableStateOf(false)
+    }
+    var question1 by remember {
+        mutableStateOf(false)
+    }
+    var question2 by remember {
+        mutableStateOf(false)
+    }
+    var question3 by remember {
+        mutableStateOf(false)
+    }
+    var question4 by remember {
+        mutableStateOf(false)
+    }
+    var question5 by remember {
+        mutableStateOf(false)
+    }
     var expanded by remember {
         mutableStateOf(false)
     }
 
     var auth = Authentication()
-
+    //if(auth.checkPreviousSessionContinuity())
+        //authenticated = true;
     MaterialTheme() {
         if (authenticated) {
             Row {
                 Column(Modifier
                     .fillMaxHeight()
-                    .fillMaxWidth(if (expanded) 0.169f else 0.08f)
-                    .background(Color(66, 133, 244))
-                    .pointerMoveFilter(
-                        onEnter = {
-                            expanded = true
-                            false
-                        },
-                        onExit = {
-                            expanded = false
-                            false
+                    .fillMaxWidth(0.15f)
+                    .background(Color(69, 133, 244))
+                    .pointerMoveFilter(),
+                    Arrangement.spacedBy(20.dp)) {
+                        if(home) {
+                            Text(
+                                text = "Time here",
+                                style = MaterialTheme.typography.body1.merge(),
+                                modifier = Modifier.padding(start = 16.dp)
+                            )
                         }
-                    ),
-                    Arrangement.spacedBy(30.dp)) {
-                    IconButton(modifier = Modifier.align(Alignment.CenterHorizontally).scale(1.0f), onClick = {
-
-                    }) {
-                        Icon(bitmap = imageFromResource("Home Icon.png"))
+                        Button(modifier = Modifier.align(Alignment.CenterHorizontally).padding(0.dp, 5.dp, 0.dp, 0.dp),
+                            onClick = {
+                                question1 = true;
+                                question2 = false;
+                                question3 = false;
+                                question4 = false;
+                                question5 = false;
+                            }) {
+                            Text("Question 1")
+                        }
+                        Button(modifier = Modifier.align(Alignment.CenterHorizontally).padding(0.dp, 5.dp, 0.dp, 0.dp),
+                            onClick = {
+                                question1 = false;
+                                question2 = true;
+                                question3 = false;
+                                question4 = false;
+                                question5 = false;
+                            }) {
+                            Text("Question 2")
+                        }
+                        Button(modifier = Modifier.align(Alignment.CenterHorizontally).padding(0.dp, 5.dp, 0.dp, 0.dp),
+                            onClick = {
+                                question1 = false;
+                                question2 = false;
+                                question3 = true;
+                                question4 = false;
+                                question5 = false;
+                            }) {
+                            Text("Question 3")
+                        }
+                        Button(modifier = Modifier.align(Alignment.CenterHorizontally).padding(0.dp, 5.dp, 0.dp, 0.dp),
+                            onClick = {
+                                question1 = false;
+                                question2 = false;
+                                question3 = false;
+                                question4 = true;
+                                question5 = false;
+                            }) {
+                            Text("Question 4")
+                        }
+                        Button(modifier = Modifier.align(Alignment.CenterHorizontally).padding(0.dp, 5.dp, 0.dp, 0.dp),
+                            onClick = {
+                                question1 = false;
+                                question2 = false;
+                                question3 = false;
+                                question4 = false;
+                                question5 = true;
+                            }) {
+                            Text("Question 5")
+                        }
+                        if(home) {
+                            Button(modifier = Modifier.align(Alignment.CenterHorizontally).padding(0.dp, 5.dp, 0.dp, 0.dp),
+                                onClick = {
+                                    // Submits quiz
+                                }) {
+                                Text("Submit Quiz")
+                            }
+                        }
                     }
 
-                    IconButton(modifier = Modifier.align(Alignment.CenterHorizontally).scale(1.0f), onClick = {
-
-                    }) {
-                        Icon(bitmap = imageFromResource("Events Icon.png"))
-                    }
-
-                    IconButton(modifier = Modifier.align(Alignment.CenterHorizontally).scale(1.0f), onClick = {
-
-                    }) {
-                        Icon(bitmap = imageFromResource("Settings Icon.png"))
-                    }
-                }
 
                 Column(Modifier
-                    .fillMaxHeight()
+                    .fillMaxHeight(0.92f)
                     .fillMaxWidth(if (expanded) 0.831f else 0.92f),
                     Arrangement.spacedBy(50.dp)) {
-                    Text(text = "Welcome, ${auth.fName}!", Modifier.align(Alignment.CenterHorizontally), fontSize = 40.sp)
+                    if(home == false) {
+                        Text(
+                            text = "Welcome, ${auth.username}!",
+                            Modifier.align(Alignment.CenterHorizontally),
+                            fontSize = 40.sp
+                        )
+                        Button(modifier = Modifier.align(Alignment.CenterHorizontally).padding(0.dp, 5.dp, 0.dp, 0.dp),
+                            onClick = {
+                                //Send request for questions
+                                objectUse = JsonKraken.serialize(auth.Question());
 
+                                home = true;
+                            }) {
+                            Text("Start Quiz")
+                        }
+                    }
                     Column(Modifier
                         .fillMaxWidth(0.8f)
                         .fillMaxHeight(0.6f)
                         .align(Alignment.CenterHorizontally)
                         .background(Color(243, 243, 243))) {
-                        Text("Competition 1")
-                        Text("Competition 2")
-                        Text("Competition 3")
+                        if(question1) {
+                            val finale: JsonValue = JsonKraken.deserialize(objectUse)
+                            if(finale[0].cast<String>() == "1") {
+                                Text(
+                                    text = finale[1]["Question"].cast<String>(),
+                                    Modifier.align(Alignment.CenterHorizontally),
+                                    fontSize = 20.sp
+                                )
+                                val radioOptions = listOf(finale[1]["Choices"]["ChoiceA"].cast<String>(), finale[1]["Choices"]["ChoiceB"].cast<String>(), finale[1]["Choices"]["ChoiceC"].cast<String>(), finale[1]["Choices"]["ChoiceD"].cast<String>())
+                                val (selectedOption, onOptionSelected) = remember { mutableStateOf(radioOptions[0]) }
+                                Column {
+                                    radioOptions.forEach { text ->
+                                        Row(
+                                            Modifier
+                                                .fillMaxWidth()
+                                                .preferredHeight(56.dp)
+                                                .selectable(
+                                                    selected = (text == selectedOption),
+                                                    onClick = { onOptionSelected(text) }
+                                                )
+                                                .padding(horizontal = 16.dp),
+                                            verticalAlignment = Alignment.CenterVertically
+                                        ) {
+                                            // The [clearAndSetSemantics] causes the button's redundant
+                                            // selectable semantics to be cleared in favor of the [Row]
+                                            // selectable's, to improve usability with screen-readers.
+                                            RadioButton(
+
+                                                selected = (text == selectedOption),
+                                                onClick = { onOptionSelected(text) }
+                                            )
+                                            Text(
+                                                text = text,
+                                                style = MaterialTheme.typography.body1.merge(),
+                                                modifier = Modifier.padding(start = 16.dp)
+                                            )
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                        if(question2) {
+                            if(true) {
+                                Text(
+                                    text = "True or False Question",
+                                    Modifier.align(Alignment.CenterHorizontally),
+                                    fontSize = 20.sp
+                                )
+                                val radioOptions = listOf("True", "False")
+                                val (selectedOption, onOptionSelected) = remember { mutableStateOf(radioOptions[0]) }
+                                Column {
+                                    radioOptions.forEach { text ->
+                                        Row(
+                                            Modifier
+                                                .fillMaxWidth()
+                                                .preferredHeight(56.dp)
+                                                .selectable(
+                                                    selected = (text == selectedOption),
+                                                    onClick = { onOptionSelected(text) }
+                                                )
+                                                .padding(horizontal = 16.dp),
+                                            verticalAlignment = Alignment.CenterVertically
+                                        ) {
+                                            // The [clearAndSetSemantics] causes the button's redundant
+                                            // selectable semantics to be cleared in favor of the [Row]
+                                            // selectable's, to improve usability with screen-readers.
+                                            RadioButton(
+
+                                                selected = (text == selectedOption),
+                                                onClick = { onOptionSelected(text) }
+                                            )
+                                            Text(
+                                                text = text,
+                                                style = MaterialTheme.typography.body1.merge(),
+                                                modifier = Modifier.padding(start = 16.dp)
+                                            )
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                        if(question3) {
+                            val checkedState = remember { mutableStateOf(false) }
+                            val checkedStateB = remember { mutableStateOf(false) }
+                            val checkedStateC = remember { mutableStateOf(false) }
+                            val checkedStateD = remember { mutableStateOf(false) }
+                            Text(
+                                text = "Checkbox Question",
+                                Modifier.align(Alignment.CenterHorizontally),
+                                fontSize = 20.sp
+                            )
+                            Column {
+                                    Row(
+                                        Modifier
+                                            .fillMaxWidth()
+                                            .preferredHeight(56.dp)
+                                            .padding(horizontal = 16.dp),
+                                        verticalAlignment = Alignment.CenterVertically
+                                    ) {
+                                        // The [clearAndSetSemantics] causes the button's redundant
+                                        // selectable semantics to be cleared in favor of the [Row]
+                                        // selectable's, to improve usability with screen-readers.
+                                        Checkbox(
+                                            checked = checkedState.value,
+                                            onCheckedChange = { checkedState.value = it }
+                                        )
+                                        Text(
+                                            text = "Checkbox 1",
+                                            style = MaterialTheme.typography.body1.merge(),
+                                            modifier = Modifier.padding(start = 16.dp)
+                                        )
+                                    }
+                                Row(
+                                    Modifier
+                                        .fillMaxWidth()
+                                        .preferredHeight(56.dp)
+                                        .padding(horizontal = 16.dp),
+                                    verticalAlignment = Alignment.CenterVertically
+                                ) {
+                                    // The [clearAndSetSemantics] causes the button's redundant
+                                    // selectable semantics to be cleared in favor of the [Row]
+                                    // selectable's, to improve usability with screen-readers.
+                                    Checkbox(
+                                        checked = checkedStateB.value,
+                                        onCheckedChange = { checkedStateB.value = it }
+                                    )
+                                    Text(
+                                        text = "Checkbox 2",
+                                        style = MaterialTheme.typography.body1.merge(),
+                                        modifier = Modifier.padding(start = 16.dp)
+                                    )
+                                }
+                                Row(
+                                    Modifier
+                                        .fillMaxWidth()
+                                        .preferredHeight(56.dp)
+                                        .padding(horizontal = 16.dp),
+                                    verticalAlignment = Alignment.CenterVertically
+                                ) {
+                                    // The [clearAndSetSemantics] causes the button's redundant
+                                    // selectable semantics to be cleared in favor of the [Row]
+                                    // selectable's, to improve usability with screen-readers.
+                                    Checkbox(
+                                        checked = checkedStateC.value,
+                                        onCheckedChange = { checkedStateC.value = it }
+                                    )
+                                    Text(
+                                        text = "Checkbox 3",
+                                        style = MaterialTheme.typography.body1.merge(),
+                                        modifier = Modifier.padding(start = 16.dp)
+                                    )
+                                }
+                                Row(
+                                    Modifier
+                                        .fillMaxWidth()
+                                        .preferredHeight(56.dp)
+                                        .padding(horizontal = 16.dp),
+                                    verticalAlignment = Alignment.CenterVertically
+                                ) {
+                                    // The [clearAndSetSemantics] causes the button's redundant
+                                    // selectable semantics to be cleared in favor of the [Row]
+                                    // selectable's, to improve usability with screen-readers.
+                                    Checkbox(
+                                        checked = checkedStateD.value,
+                                        onCheckedChange = { checkedStateD.value = it }
+                                    )
+                                    Text(
+                                        text = "Checkbox 4",
+                                        style = MaterialTheme.typography.body1.merge(),
+                                        modifier = Modifier.padding(start = 16.dp)
+                                    )
+                                }
+                            }
+                        }
+                        if(question4) {
+                            var answer by remember {
+                                mutableStateOf("")
+                            }
+
+                            // The [clearAndSetSemantics] causes the button's redundant
+                            // selectable semantics to be cleared in favor of the [Row]
+                            // selectable's, to improve usability with screen-readers.
+                            Text(
+                                text = "FBLA was founded in ",
+                                Modifier.align(Alignment.CenterHorizontally),
+                                fontSize = 20.sp
+                            )
+                            TextField(
+                                modifier = Modifier.align(Alignment.CenterHorizontally),
+                                value = answer,
+                                onValueChange = { answer = it },
+                            )
+
+
+                        }
                     }
                 }
             }
@@ -107,210 +367,50 @@ fun main() = Window(title = "CSSA Test Portal", icon = loadImageResource("CSSA.p
                 Row(Modifier.fillMaxSize().align(Alignment.CenterHorizontally)) {
 
                     Column(Modifier.fillMaxSize(), verticalArrangement = Arrangement.Center, horizontalAlignment = Alignment.CenterHorizontally) {
-                        Text("CSSA Test Portal", modifier = Modifier.padding(0.dp, 0.dp, 0.dp, 30.dp), fontSize = 40.sp, textAlign = TextAlign.Right)
+                        Text("FBLA Quiz Portal", modifier = Modifier.padding(0.dp, 0.dp, 0.dp, 30.dp), fontSize = 40.sp, textAlign = TextAlign.Right)
 
                         Column(Modifier
                             .align(Alignment.CenterHorizontally)
                             .background(Color(0xF0, 0xF0, 0xF0), RoundedCornerShape(8.dp))
                             .border(3.dp, Color(33, 33, 33), RoundedCornerShape(8.dp))) {
-
+                            var name by remember {
+                                mutableStateOf("")
+                            }
                             Column(Modifier
                                 .align(Alignment.CenterHorizontally)
                                 .padding(10.dp, 15.dp, 10.dp, 15.dp), Arrangement.spacedBy(15.dp)) {
 
-                                if (noUsername) {
-                                    var username by remember {
-                                        mutableStateOf("")
-                                    }
+                                Text("Name", textAlign = TextAlign.Left)
 
-                                    var email by remember {
-                                        mutableStateOf("")
-                                    }
+                                TextField(
+                                    modifier = Modifier.align(Alignment.CenterHorizontally),
+                                    value = name,
+                                    onValueChange = { name = it },
+                                )
 
-                                    var fName by remember {
-                                        mutableStateOf("")
-                                    }
-
-                                    var lName by remember {
-                                        mutableStateOf("")
-                                    }
-
-                                    var password by remember {
-                                        mutableStateOf("")
-                                    }
-
-                                    var confirmPassword by remember {
-                                        mutableStateOf("")
-                                    }
-
-                                    Row(Modifier.align(Alignment.CenterHorizontally).padding(0.dp, 0.dp, 0.dp, 0.dp)) {
-                                        Column(Modifier.padding(0.dp, 0.dp, 0.dp, 15.dp)) {
-                                            Text("Username", textAlign = TextAlign.Left)
-
-                                            TextField(
-                                                modifier = Modifier.align(Alignment.CenterHorizontally),
-                                                value = username,
-                                                onValueChange = { username = it },
-                                            )
-                                        }
-
-                                        Column(Modifier.padding(15.dp, 0.dp, 0.dp, 0.dp)) {
-                                            Text("Email", textAlign = TextAlign.Left)
-
-                                            TextField(
-                                                modifier = Modifier.align(Alignment.CenterHorizontally),
-                                                value = email,
-                                                onValueChange = { email = it },
-                                            )
-                                        }
-                                    }
-
-                                    Row(Modifier.align(Alignment.CenterHorizontally).padding(0.dp, 0.dp, 0.dp, 0.dp)) {
-                                        Column(Modifier.padding(0.dp, 0.dp, 0.dp, 15.dp)) {
-                                            Text("First Name", textAlign = TextAlign.Left)
-
-                                            TextField(
-                                                modifier = Modifier.align(Alignment.CenterHorizontally),
-                                                value = fName,
-                                                onValueChange = { fName = it },
-                                            )
-                                        }
-
-                                        Column(Modifier.padding(15.dp, 0.dp, 0.dp, 0.dp)) {
-                                            Text("Last Name", textAlign = TextAlign.Left)
-
-                                            TextField(
-                                                modifier = Modifier.align(Alignment.CenterHorizontally),
-                                                value = lName,
-                                                onValueChange = { lName = it },
-                                            )
-                                        }
-                                    }
-
-                                    Row(Modifier.align(Alignment.CenterHorizontally).padding(0.dp, 0.dp, 0.dp, 0.dp)) {
-                                        Column(Modifier.padding(0.dp, 0.dp, 0.dp, 15.dp)) {
-                                            Text("Password", textAlign = TextAlign.Left)
-
-                                            TextField(
-                                                modifier = Modifier.align(Alignment.CenterHorizontally),
-                                                value = password,
-                                                onValueChange = { password = it },
-                                            )
-                                        }
-
-                                        Column(Modifier.padding(15.dp, 0.dp, 0.dp, 0.dp)) {
-                                            Text("Confirm Password", textAlign = TextAlign.Left)
-
-                                            TextField(
-                                                modifier = Modifier.align(Alignment.CenterHorizontally),
-                                                value = confirmPassword,
-                                                onValueChange = {
-                                                    confirmPassword = it
-                                                },
-                                            )
-                                        }
-                                    }
-
-                                    if ((password != confirmPassword || confirmPassword == "") && confirmPassword != "") {
-                                        Row() {
-                                            Text(text = "Passwords do not match!", textAlign = TextAlign.Left, color = Color(188, 88, 88))
-                                        }
-                                    }
-
-                                    Row(Modifier.align(Alignment.CenterHorizontally)) {
-                                        Column() {
-                                            Button(modifier = Modifier.align(Alignment.CenterHorizontally).padding(0.dp, 5.dp, 0.dp, 0.dp),
-                                                onClick = {
-                                                    if(auth.checkUsername(username)) {
-                                                        if(auth.checkEmail(email)) {
-                                                            if(auth.createAccount(fName, lName, username, email, password)) {
-                                                                authenticated = true
-                                                            } else {
-                                                                print("Error in creating account")
-                                                            }
-                                                        } else {
-                                                            print("Email is already in use")
-                                                        }
-                                                    } else {
-                                                        print("Username is already in use")
-                                                    }
-                                                }) {
-                                                Text("Sign Up")
-                                            }
-
-                                            TextButton(modifier = Modifier.align(Alignment.CenterHorizontally).padding(0.dp, 5.dp, 0.dp, 0.dp),
-                                                onClick = {
-                                                    noUsername = false
-                                                }) {
-                                                Text("Already have an account? Sign in!")
-                                            }
-                                        }
-                                    }
-                                } else {
-                                    var username by remember {
-                                        mutableStateOf("")
-                                    }
-
-                                    var password by remember {
-                                        mutableStateOf("")
-                                    }
-
-                                    Text("Username", textAlign = TextAlign.Left)
-
-                                    TextField(
-                                        modifier = Modifier.align(Alignment.CenterHorizontally),
-                                        value = username,
-                                        onValueChange = { username = it },
-                                    )
-
-                                    Text("Password", textAlign = TextAlign.Left)
-
-                                    TextField(
-                                        modifier = Modifier.align(Alignment.CenterHorizontally),
-                                        value = password,
-                                        onValueChange = { password = it },
-                                    )
-
-                                    Button(modifier = Modifier.align(Alignment.CenterHorizontally).padding(0.dp, 5.dp, 0.dp, 0.dp),
-                                        onClick = {
-
-                                            if(auth.manualSignIn(username, password)) {
-                                                authenticated = true
-                                            } else {
-                                                print("Invalid Username or Password!");
-                                            }
-
-
-                                        }) {
-                                        Text("Sign In")
-                                    }
-
-                                    TextButton(modifier = Modifier.align(Alignment.CenterHorizontally),
-                                        onClick = {
-                                            noUsername = true
-                                        }) {
-                                        Text("Don't have an account? Sign up!")
-                                    }
-                                }
-
-                                Divider(color = Color.Gray, thickness = 2.dp, modifier = Modifier.width(250.dp).align(Alignment.CenterHorizontally).padding(0.dp, 0.dp, 0.dp, 10.dp))
-
-                                Button(modifier = Modifier.align(Alignment.CenterHorizontally),
+                                Button(modifier = Modifier.align(Alignment.CenterHorizontally).padding(0.dp, 5.dp, 0.dp, 0.dp),
                                     onClick = {
-                                        auth.googleSignIn()
-
-                                        authenticated = true
+                                        if(auth.checkClient(name)) {
+                                            authenticated = true
+                                        }
                                     }) {
-                                    Text("Google")
+                                    Text("Enter Portal")
                                 }
-
                             }
 
+                            Divider(color = Color.Gray, thickness = 2.dp, modifier = Modifier.width(250.dp).align(Alignment.CenterHorizontally).padding(0.dp, 0.dp, 0.dp, 10.dp))
+
+                            Button(modifier = Modifier.align(Alignment.CenterHorizontally),
+                                onClick = {
+                                    //Display information to judges
+
+                                }) {
+                                Text("Judge Info")
+                            }
+                            Divider(color = Color.Transparent, thickness = 2.dp, modifier = Modifier.width(250.dp).align(Alignment.CenterHorizontally).padding(0.dp, 0.dp, 0.dp, 10.dp))
                         }
                     }
-
                 }
-
             }
         }
     }

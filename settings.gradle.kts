@@ -6,5 +6,5 @@ pluginManagement {
     }
     
 }
-rootProject.name = "CSSATestPortal"
+rootProject.name = "FBLAQuizPortal"
 
